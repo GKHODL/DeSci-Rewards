@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>DeSci Rewards Platform</title>
+        
+        <!-- Meta Tags for Social Sharing -->
+        <meta name="description" content="Empowering DeSci Innovation: Submit your research and earn SCI/ACC tokens.">
+        <meta property="og:title" content="DeSci Rewards Platform">
+        <meta property="og:description" content="Submit your groundbreaking research and earn SCI/ACC tokens through our AI-powered reward system.">
+        <meta property="og:image" content="URL_TO_YOUR_PLATFORM_IMAGE">
+        <meta property="og:url" content="URL_TO_YOUR_PLATFORM">
+        <meta name="twitter:card" content="summary_large_image">
+        
+        <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap" as="style">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+        <style>
+            :root {
+                /* Trendy Color Scheme */
+                --primary-blue: #4dabf5;
+                --secondary-green: #66bb6a;
+                --soft-gray: #e0e0e0;
+                --dark-gray: #424242;
+                --bg-light: #f5f5f5;
+                --text-light: #212121;
+                --bg-dark: #121212;
+                --text-dark: #ffffff;
+                --card-bg-light: #ffffff;
+                --card-bg-dark: #1e1e1e;
+                --border-color-light: #bdbdbd;
+                --border-color-dark: #5c6bc0;
+                --text-gray-dark: #a3a3a3;
+                --text-gray-light: #717171;
+            }
+            body {
+                font-family: 'Inter', sans-serif;
+                background: var(--bg-dark);
+                color: var(--text-dark);
+                transition: background 0.3s, color 0.3s;
+            }
+            body.light-mode {
+                background: var(--bg-light);
+                color: var(--text-light);
+            }
+            /* Updated Cyber Border */
+            .cyber-border {
+                border: 2px solid var(--primary-blue);
+                box-shadow: 0 0 10px var(--primary-blue);
+            }
+            .cyber-text {
+                text-shadow: 0 0 5px var(--primary-blue);
+            }
+            .project-card {
+                transition: all 0.3s ease;
+                background: var(--card-bg-dark);
+            }
+            body.light-mode .project-card {
+                background: var(--card-bg-light);
+            }
+            .project-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 0 20px var(--primary-blue);
+            }
+            .code-font {
+                font-family: 'JetBrains Mono', monospace;
+            }
+            .border-color {
+                border-color: var(--border-color-dark);
+            }
+            body.light-mode .border-color {
+                border-color: var(--border-color-light);
+            }
+            nav {
+                background: var(--bg-dark);
+            }
+            body.light-mode nav {
+                background: var(--bg-light);
+            }
+            footer {
+                border-top-color: var(--border-color-dark);
+            }
+            body.light-mode footer {
+                border-top-color: var(--border-color-light);
+            }
+            .text-gray {
+                color: var(--text-gray-dark); /* Default to dark mode gray */
+            }
+            body.light-mode .text-gray {
+                color: var(--text-gray-light); /* Override for light mode */
+            }
+            /* New Button Style */
+            .trendy-button {
+                background-color: var(--secondary-green);
+                color: var(--text-dark);
+                padding: 0.75rem 1.5rem;
+                border-radius: 0.5rem;
+                transition: background-color 0.3s ease;
+            }
+            .trendy-button:hover {
+                background-color: #4caf50;
+            }
+            /* Active Link Indicator */
+            .nav-link.active {
+                color: var(--secondary-green);
+                font-weight: bold;
+            }
+            /* Wallet Dropdown */
+            .wallet-dropdown {
+                position: relative;
+                display: inline-block;
+            }
+            .wallet-dropdown-content {
+                display: none;
+                position: absolute;
+                background-color: var(--card-bg-dark);
+                min-width: 160px;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+                z-index: 1;
+                right: 0;
+                border-radius: 0.5rem;
+                padding: 0.5rem 0;
+            }
+            body.light-mode .wallet-dropdown-content {
+                background-color: var(--card-bg-light);
+            }
+            .wallet-dropdown-content a {
+                color: var(--text-dark);
+                padding: 0.75rem 1rem;
+                text-decoration: none;
+                display: block;
+                transition: background-color 0.3s;
+            }
+            body.light-mode .wallet-dropdown-content a {
+                color: var(--text-light);
+            }
+            .wallet-dropdown-content a:hover {
+                background-color: var(--primary-blue);
+                color: var(--text-dark);
+            }
+            .wallet-dropdown:hover .wallet-dropdown-content {
+                display: block;
+            }
+            /* Enhanced Submit Button */
+            .submit-button {
+                @apply cyber-border px-8 py-3 rounded-lg text-[#4dabf5] hover:bg-[#4dabf5] hover:text-black transition-colors text-lg animate-pulse transform hover:scale-105;
+            }
+            /* Project Card Additions */
+            .researcher-info {
+                display: flex;
+                align-items: center;
+                margin-bottom: 0.5rem;
+            }
+            .researcher-avatar {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                margin-right: 0.5rem;
+            }
+            .submission-date {
+                font-size: 0.8rem;
+                color: var(--text-gray-dark);
+            }
+            .funding-bar {
+                height: 8px;
+                background-color: var(--soft-gray);
+                border-radius: 4px;
+                overflow: hidden;
+            }
+            .funding-progress {
+                height: 100%;
+                background-color: var(--secondary-green);
+                width: 50%; /* Example: 50% funded */
+            }
+            /* Leaderboard Styles */
+            .leaderboard {
+                margin-top: 2rem;
+            }
+            .leaderboard-title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: var(--primary-blue);
+                margin-bottom: 1rem;
+            }
+            .leaderboard-list {
+                list-style: none;
+                padding: 0;
+            }
+            .leaderboard-item {
+                display: flex;
+                align-items: center;
+                padding: 0.75rem;
+                border-bottom: 1px solid var(--border-color-dark);
+            }
+            body.light-mode .leaderboard-item {
+                border-bottom: 1px solid var(--border-color-light);
+            }
+            .leaderboard-item:last-child {
+                border-bottom: none;
+            }
+            .leaderboard-rank {
+                width: 2rem;
+                text-align: center;
+                font-weight: bold;
+                color: var(--text-gray-dark);
+            }
+            .leaderboard-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                margin-right: 1rem;
+            }
+            .leaderboard-name {
+                font-weight: 600;
+            }
+            /* Recently Funded Projects */
+            .recent-projects {
+                margin-top: 2rem;
+            }
+            .recent-projects-title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: var(--primary-blue);
+                margin-bottom: 1rem;
+            }
+            .recent-projects-list {
+                display: flex;
+                overflow-x: auto;
+                padding-bottom: 1rem;
+            }
+            .recent-project-card {
+                flex: 0 0 auto;
+                width: 250px;
+                margin-right: 1rem;
+                border-radius: 0.5rem;
+                padding: 1rem;
+                background-color: var(--card-bg-dark);
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+            body.light-mode .recent-project-card {
+                background-color: var(--card-bg-light);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            }
+            .recent-project-title {
+                font-weight: bold;
+                margin-bottom: 0.5rem;
+                color: var(--primary-blue);
+            }
+            .recent-project-description {
+                color: var(--text-gray-dark);
+                font-size: 0.9rem;
+            }
+            /* Testimonials */
+            .testimonials {
+                margin-top: 2rem;
+            }
+            .testimonials-title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: var(--primary-blue);
+                margin-bottom: 1rem;
+            }
+            .testimonial-card {
+                padding: 1rem;
+                border-radius: 0.5rem;
+                background-color: var(--card-bg-dark);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                margin-bottom: 1rem;
+            }
+            body.light-mode .testimonial-card {
+                background-color: var(--card-bg-light);
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            }
+            .testimonial-text {
+                color: var(--text-gray-dark);
+                margin-bottom: 0.5rem;
+            }
+            .testimonial-author {
+                font-weight: bold;
+                color: var(--secondary-green);
+            }
+            /* FAQ Section */
+            .faq {
+                margin-top: 2rem;
+            }
+            .faq-title {
+                font-size: 1.5rem;
+                font-weight: bold;
+                color: var(--primary-blue);
+                margin-bottom: 1rem;
+            }
+            .faq-item {
+                margin-bottom: 1rem;
+            }
+            .faq-question {
+                font-weight: bold;
+                color: var(--text-gray-dark);
+                cursor: pointer;
+                padding: 0.5rem;
+                border-bottom: 1px solid var(--border-color-dark);
+            }
+            body.light-mode .faq-question {
+                border-bottom: 1px solid var(--border-color-light);
+            }
+            .faq-answer {
+                color: var(--text-gray-dark);
+                padding: 0.5rem;
+                display: none;
+            }
+            /* Share Buttons */
+            .share-buttons {
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 1rem;
+            }
+            .share-button {
+                background-color: var(--primary-blue);
+                color: var(--text-dark);
+                border: none;
+                padding: 0.5rem 1rem;
+                margin-left: 0.5rem;
+                border-radius: 0.25rem;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            .share-button:hover {
+                background-color: #3598dc;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app" class="min-h-screen">
+            <nav class="fixed w-full border-b border-color z-50">
+                <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                    <div class="text-[#4dabf5] text-xl font-bold code-font">DeSci<span class="text-[#66bb6a]">.Rewards</span></div>
+                    <div class="flex gap-6 items-center">
+                        <a href="#" class="text-white hover:text-[#4dabf5] transition-colors nav-link active">Home</a>
+                        <a href="#" class="text-white hover:text-[#4dabf5] transition-colors nav-link">Projects</a>
+                        <a href="#" class="text-white hover:text-[#4dabf5] transition-colors nav-link">Submit</a>
+                        
+                        <div class="wallet-dropdown">
+                            <button class="cyber-border px-4 py-1 rounded text-[#4dabf5] hover:bg-[#4dabf5] hover:text-black transition-colors">
+                                Connect Wallet
+                            </button>
+                            <div class="wallet-dropdown-content">
+                                <a href="#">MetaMask</a>
+                                <a href="#">WalletConnect</a>
+                                <a href="#">Coinbase Wallet</a>
+                            </div>
+                        </div>
+
+                        <button id="theme-toggle" class="text-gray-500 hover:text-gray-400 focus:outline-none">
+                            <i id="theme-toggle-icon" class="bi bi-brightness-high-fill"></i>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            <header class="pt-24 pb-16 px-4">
+                <div class="container mx-auto text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold cyber-text mb-6">
+                        Empowering DeSci Innovation
+                    </h1>
+                    <p class="text-xl text-gray max-w-2xl mx-auto mb-8">
+                        Submit your groundbreaking research and earn SCI/ACC tokens through our AI-powered reward system
+                    </p>
+                    <button class="submit-button">
+                        Submit Your Project
+                    </button>
+                    <button class="bg-transparent hover:bg-[#4dabf5] text-[#4dabf5] font-semibold hover:text-white py-2 px-4 border border-[#4dabf5] hover:border-transparent rounded transition-colors duration-300 ml-4">
+                        Explore Projects
+                    </button>
+                </div>
+            </header>
+
+            <main class="container mx-auto px-4 py-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div v-for="(project, index) in projects" :key="index" class="project-card cyber-border rounded-lg p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-xl font-bold text-[#4dabf5]">{{ project.title }}</h3>
+                            <span :class="{'bg-[#66bb6a]/20 text-[#66bb6a]': project.status === 'Funded', 'bg-orange-200 text-orange-700': project.status === 'Pending'}" class="px-2 py-1 rounded text-sm">{{ project.status }}</span>
+                        </div>
+                        <div class="researcher-info">
+                            <img :src="project.avatar" alt="Researcher Avatar" class="researcher-avatar" loading="lazy">
+                            <div>
+                                <div class="submission-date">Submitted: {{ project.submissionDate }}</div>
+                            </div>
+                        </div>
+                        <p class="text-gray mb-4">
+                            {{ project.description }}
+                        </p>
+                        <div class="funding-bar">
+                            <div class="funding-progress" :style="{ width: project.fundingProgress + '%' }"></div>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <div class="text-sm">
+                                <div class="text-[#4dabf5]">Reward Pool</div>
+                                <div class="code-font">10,000 SCI/ACC</div>
+                            </div>
+                            <button class="trendy-button">
+                                View Details
+                            </button>
+                        </div>
+                         <div class="share-buttons">
+                            <button class="share-button" @click="shareOnTwitter(project)">
+                                <i class="bi bi-twitter"></i> Twitter
+                            </button>
+                            <button class="share-button" @click="shareOnDiscord(project)">
+                                <i class="bi bi-discord"></i> Discord
+                            </button>
+                            <button class="share-button" @click="shareOnTelegram(project)">
+                                <i class="bi bi-telegram"></i> Telegram
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="leaderboard">
+                    <h2 class="leaderboard-title">Top Contributors</h2>
+                    <ul class="leaderboard-list">
+                        <li v-for="(contributor, index) in topContributors" :key="index" class="leaderboard-item">
+                            <span class="leaderboard-rank">{{ index + 1 }}</span>
+                            <img :src="contributor.avatar" alt="Contributor Avatar" class="leaderboard-avatar" loading="lazy">
+                            <span class="leaderboard-name">{{ contributor.name }}</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="recent-projects">
+                    <h2 class="recent-projects-title">Recently Funded Projects</h2>
+                    <div class="recent-projects-list">
+                        <div v-for="(recentProject, index) in recentlyFunded" :key="index" class="recent-project-card">
+                            <h3 class="recent-project-title">{{ recentProject.title }}</h3>
+                            <p class="recent-project-description">{{ recentProject.description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonials">
+                    <h2 class="testimonials-title">Testimonials</h2>
+                    <div v-for="(testimonial, index) in testimonials" :key="index" class="testimonial-card">
+                        <p class="testimonial-text">{{ testimonial.text }}</p>
+                        <p class="testimonial-author">- {{ testimonial.author }}</p>
+                    </div>
+                </div>
+
+                <div class="faq">
+                    <h2 class="faq-title">Frequently Asked Questions</h2>
+                    <div v-for="(faqItem, index) in faqItems" :key="index" class="faq-item">
+                        <div class="faq-question" @click="toggleFAQ(index)">{{ faqItem.question }}</div>
+                        <div class="faq-answer" :id="'faq-answer-' + index">{{ faqItem.answer }}</div>
+                    </div>
+                </div>
+            </main>
+
+            <footer class="border-t border-color mt-12">
+                <div class="container mx-auto px-4 py-8">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <div class="text-[#4dabf5] code-font mb-4 md:mb-0">
+                            DeSci.Rewards © 2024
+                        </div>
+                        <div class="flex gap-4">
+                            <a href="#" class="text-white hover:text-[#4dabf5]"><i class="bi bi-github"></i></a>
+                            <a href="#" class="text-white hover:text-[#4dabf5]"><i class="bi bi-discord"></i></a>
+                            <a href="#" class="text-white hover:text-[#4dabf5]"><i class="bi bi-telegram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+
+        <script>
+            const { createApp } = Vue
+            
+            createApp({
+                data() {
+                    return {
+                        projects: [
+                            {
+                                title: 'Genomic Sequencing Project',
+                                description: 'Advancing genomic research through decentralized data analysis and secure blockchain storage.',
+                                status: 'Funded',
+                                avatar: 'https://randomuser.me/api/portraits/thumb/men/75.jpg',
+                                submissionDate: '2024-01-20',
+                                fundingProgress: 100
+                            },
+                            {
+                                title: 'AI-Driven Drug Discovery',
+                                description: 'Using AI algorithms to accelerate drug discovery and development processes.',
+                                status: 'Pending',
+                                avatar: 'https://randomuser.me/api/portraits/thumb/women/62.jpg',
+                                submissionDate: '2024-02-15',
+                                fundingProgress: 50
+                            },
+                            {
+                                title: 'Sustainable Agriculture Research',
+                                description: 'Researching sustainable agricultural practices to improve food security and environmental conservation.',
+                                status: 'Funded',
+                                avatar: 'https://randomuser.me/api/portraits/thumb/men/23.jpg',
+                                submissionDate: '2024-03-01',
+                                fundingProgress: 100
+                            },
+                            {
+                                title: 'Climate Change Modeling',
+                                description: 'Developing advanced climate change models for better prediction and mitigation strategies.',
+                                status: 'Pending',
+                                avatar: 'https://randomuser.me/api/portraits/thumb/women/44.jpg',
+                                submissionDate: '2024-03-10',
+                                fundingProgress: 75
+                            },
+                            {
+                                title: 'Neuroscience Research Initiative',
+                                description: 'Exploring the complexities of the human brain through innovative neuroscience research.',
+                                status: 'Funded',
+                                avatar: 'https://randomuser.me/api/portraits/thumb/men/82.jpg',
+                                submissionDate: '2024-04-01',
+                                fundingProgress: 100
+                            },
+                            {
+                                title: 'Renewable Energy Solutions',
+                                description: 'Developing and testing new renewable energy solutions for a sustainable future.',
+                                status: 'Pending',
+                                avatar: 'https://randomuser.me/api/portraits/thumb/women/28.jpg',
+                                submissionDate: '2024-04-15',
+                                fundingProgress: 25
+                            }
+                        ],
+                        topContributors: [
+                            { name: 'Dr. Jane Smith', avatar: 'https://randomuser.me/api/portraits/thumb/women/55.jpg' },
+                            { name: 'Dr. John Doe', avatar: 'https://randomuser.me/api/portraits/thumb/men/47.jpg' },
+                            { name: 'Dr. Alice Johnson', avatar: 'https://randomuser.me/api/portraits/thumb/women/91.jpg' },
+                        ],
+                        recentlyFunded: [
+                            { title: 'AI for Cancer Research', description: 'Using AI to identify new cancer treatments.' },
+                            { title: 'Ocean Plastic Cleanup', description: 'Developing new methods for removing plastic from the ocean.' },
+                        ],
+                        testimonials: [
+                            {
+                                text: 'The DeSci Rewards platform has been instrumental in securing funding for my research. The token rewards are a great incentive!',
+                                author: 'Dr. Emily Carter'
+                            },
+                            {
+                                text: 'I was able to connect with a community of like-minded researchers and secure funding for my project. Highly recommended!',
+                                author: 'Dr. David Lee'
+                            }
+                        ],
+                        faqItems: [
+                            {
+                                question: 'What is DeSci?',
+                                answer: 'DeSci stands for Decentralized Science. It leverages blockchain technology to create a more transparent, collaborative, and efficient research ecosystem.'
+                            },
+                            {
+                                question: 'How do token rewards work?',
+                                answer: 'Researchers earn SCI/ACC tokens for submitting and contributing to projects. These tokens can be used within the DeSci ecosystem or exchanged for other cryptocurrencies.'
+                            },
+                            {
+                                question: 'What are the submission guidelines?',
+                                answer: 'Please ensure your submission includes a detailed project proposal, research methodology, and potential impact. Follow the guidelines outlined in our submission portal.'
+                            }
+                        ],
+                        activeFAQ: null
+                    }
+                },
+                methods: {
+                    toggleFAQ(index) {
+                        const answer = document.getElementById('faq-answer-' + index);
+                        if (answer.style.display === 'block') {
+                            answer.style.display = 'none';
+                        } else {
+                            answer.style.display = 'block';
+                        }
+                    },
+                    shareOnTwitter(project) {
+                        const text = `Check out this DeSci project: ${project.title} - ${project.description}`;
+                        const url = encodeURIComponent(window.location.href);
+                        window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+                    },
+                    shareOnDiscord(project) {
+                        const text = `Check out this DeSci project: ${project.title} - ${project.description} - ${window.location.href}`;
+                        // Discord sharing requires a bot or manual posting due to API limitations
+                        alert('Share this link on Discord:\n' + text);
+                    },
+                    shareOnTelegram(project) {
+                        const text = `Check out this DeSci project: ${project.title} - ${project.description}`;
+                        const url = encodeURIComponent(window.location.href);
+                        window.open(`https://t.me/share/url?url=${url}&text=${text}`, '_blank');
+                    }
+                }
+            }).mount('#app')
+
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeToggleIcon = document.getElementById('theme-toggle-icon');
+            const body = document.body;
+
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('light-mode');
+                if (body.classList.contains('light-mode')) {
+                    themeToggleIcon.classList.remove('bi-brightness-high-fill');
+                    themeToggleIcon.classList.add('bi-moon-stars-fill');
+                } else {
+                    themeToggleIcon.classList.remove('bi-moon-stars-fill');
+                    themeToggleIcon.classList.add('bi-brightness-high-fill');
+                }
+            });
+
+            // Active Link Indicator
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        </script>
+    <script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+    </body>
+    </html>
